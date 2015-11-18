@@ -136,6 +136,9 @@ def parse_events(file, conn, bound_param):
 
             sql = 'INSERT INTO events(%s) VALUES(%s)' % (','.join(headers), ','.join([bound_param] * len(headers)))
             conn.execute(sql, row)
+            
+def shellquote(s):
+    return "'" + s.replace("'", "'\\''") + "'"
 
 
 def main():
@@ -152,7 +155,7 @@ def main():
     verbose     = config.get('debug', 'verbose')
     chadwick    = config.get('chadwick', 'directory')
     path        = os.path.abspath(config.get('download', 'directory'))
-    csvpath     = '%s/csv' % path
+    csvpath     = shellquote('%s/csv' % path)
     files       = []
     years       = []
     opts, args  = getopt.getopt(sys.argv[1:], "y:")
